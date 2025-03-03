@@ -1,10 +1,26 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+// import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+// import "./index.css";
+// import App from "./App.jsx";
+import { BrowserRouter, Routes, Route } from "react-router";
+import NoAuthLayout from "./pages/NoAuthLayout";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+import AuthLayout from "./pages/AuthLayout";
+import Home from "./pages/Home";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <Routes>
+      <Route element={<NoAuthLayout />}>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+      </Route>
+
+      <Route element={<AuthLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route />
+      </Route>
+    </Routes>
+  </BrowserRouter>
+);
