@@ -20,9 +20,10 @@ app.get("/", (req, res) => {
 
 app.post("/register", Controller.register);
 app.post("/login", Controller.login);
+app.post("/board", Controller.addBoard)
+app.get("/board", Controller.getBoard)
 
 app.use(authentication);
-
 
 app.use(errorHandler);
 

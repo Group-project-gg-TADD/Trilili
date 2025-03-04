@@ -40,15 +40,21 @@ class Controller {
       next(err);
     }
   }
+  static async addBoard(req, res, next){
+    try {
+      
+    } catch (error) {
+      next(error)
+    }
+  }
 
-  // static async login (req, res){
-  //     try {
-
-  //     } catch (err) {
-  //         console.log(err);
-
-  //     }
-  // }
+  static async getBoard(req, res, next){
+    try {
+      
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = Controller;
