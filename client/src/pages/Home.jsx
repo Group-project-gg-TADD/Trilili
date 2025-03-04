@@ -4,6 +4,7 @@ import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { BoardContext } from "../context/BoardContext";
 import { useState } from "react";
+import Main from "./Main";
 
 function Home() {
   const boardData = {
@@ -29,6 +30,7 @@ function Home() {
       <BoardContext.Provider value={{ allboard, setAllBoard }}>
         <div className='content flex'>
           <Sidebar></Sidebar>
+          <Main></Main>
         </div>
 
       </BoardContext.Provider>
