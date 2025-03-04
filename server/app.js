@@ -9,6 +9,7 @@ const cors = require("cors");
 const Controller = require("./controllers/controller");
 const { authentication } = require("./middlewares/authentication");
 const { errorHandler } = require("./middlewares/errorHandler");
+const cardController = require("./controllers/cardController");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -23,8 +24,8 @@ app.post("/login", Controller.login);
 
 app.use(authentication);
 
-app.get("/card/:listId", Controller.getCard);
-app.post("/card/:listId", Controller.addCard);
+app.get("/card/:listId", cardController.getCard);
+app.post("/card/:listId", cardController.addCard);
 
 app.use(errorHandler);
 

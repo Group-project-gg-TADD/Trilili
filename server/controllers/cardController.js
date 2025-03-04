@@ -34,3 +34,5 @@ class cardController {
         }
     }
 }
+
+module.exports = cardController;
