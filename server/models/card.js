@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   Card.init({
     title: {
       type: DataTypes.STRING,
+      allowNull:false,
       validate: {
         notNull: {
           msg: "Title is required"
@@ -24,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notNull: {
           msg: "Description is required"
