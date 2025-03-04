@@ -17,17 +17,17 @@ class boardController {
     }
   }
 
-  // static async getBoards(req, res, next) {
-  //   try {
-  //     // const userId = req.user.id;
+  static async getBoards(req, res, next) {
+    try {
+      // const userId = req.user.id;
 
-  //     const boards = await Board.findAll({});
+      const boards = await Board.findAll({});
 
-  //     res.status(200).json(boards);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+      res.status(200).json(boards);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   static async getBoardById(req, res, next) {
     try {

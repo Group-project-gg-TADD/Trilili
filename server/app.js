@@ -71,15 +71,7 @@ app.post("/login", userController.login);
 app.use(authentication);
 app.post("/board", boardController.addBoard);
 
-app.get("/board", async (req, res) => {
-  try {
-    const data = await Board.findAll({});
-    res.json(data);
-  } catch (error) {
-    console.log(error);
-  }
-});
-// app.get("/board", boardController.getBoards);
+app.get("/board", boardController.getBoards);
 app.get("/board/:id", boardController.getBoardById);
 app.post("/board/member", boardController.addBoardMember);
 
