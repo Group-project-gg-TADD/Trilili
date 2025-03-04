@@ -20,7 +20,7 @@ module.exports = {
       listId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references:{
+        references: {
           model: "Lists",
           key: "id"
         }
@@ -30,6 +30,10 @@ module.exports = {
         allowNull: false,
       },
       status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      imgUrl: {
         type: Sequelize.STRING,
         allowNull: false,
       },
