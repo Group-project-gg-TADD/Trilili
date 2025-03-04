@@ -23,6 +23,8 @@ app.post("/login", Controller.login);
 
 app.use(authentication);
 
+app.get("/card/:listId", Controller.getCard);
+app.post("/card/:listId", Controller.addCard);
 
 app.use(errorHandler);
 
