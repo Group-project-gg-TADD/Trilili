@@ -1,7 +1,7 @@
 const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { User } = require("../models");
-class Controller {
+class userController {
   static async register(req, res, next) {
     try {
       const data = await User.create(req.body);
@@ -40,21 +40,6 @@ class Controller {
       next(err);
     }
   }
-  static async addBoard(req, res, next){
-    try {
-      
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  static async getBoard(req, res, next){
-    try {
-      
-    } catch (error) {
-      next(error)
-    }
-  }
 }
 
-module.exports = Controller;
+module.exports = userController;
