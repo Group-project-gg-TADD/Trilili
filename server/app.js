@@ -2,6 +2,8 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
+const { Board } = require("./models");
+
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -36,6 +38,13 @@ io.on("connection", (socket) => {
   // Kirim pesan ke orang yg join
   socket.emit("welcome_message", "Hi brader " + socket.id);
 
+  socket.on("chat/new_message", (msg) => {
+    io.emit("chat/update_message", {
+      message: msg,
+      sender: socket.handshake.auth?.username,
+    });
+  });
+
   socket.on("disconnect", () => {
     console.log(socket.id, "<<< new user disconnect");
     updateOnlineUsers(io);
@@ -61,7 +70,16 @@ app.post("/login", userController.login);
 
 app.use(authentication);
 app.post("/board", boardController.addBoard);
-app.get("/board", boardController.getBoards);
+
+app.get("/board", async (req, res) => {
+  try {
+    const data = await Board.findAll({});
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
+// app.get("/board", boardController.getBoards);
 app.get("/board/:id", boardController.getBoardById);
 app.post("/board/member", boardController.addBoardMember);
 

@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import AuthLayout from "./pages/AuthLayout";
 import Home from "./pages/Home";
 import Comment from "./pages/Comment";
+import Project from "./pages/Project";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -20,6 +21,7 @@ createRoot(document.getElementById("root")).render(
 
       <Route element={<AuthLayout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/project" element={<Project />} />
         <Route path="/comment" element={<Comment />} />
       </Route>
     </Routes>

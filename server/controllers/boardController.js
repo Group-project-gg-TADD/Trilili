@@ -17,32 +17,23 @@ class boardController {
     }
   }
 
-  static async getBoards(req, res, next) {
-    try {
-      const userId = req.user.id;
+  // static async getBoards(req, res, next) {
+  //   try {
+  //     // const userId = req.user.id;
 
-      const boards = await Board.findAll({
-        where: { ownerId: userId },
-        include: [
-          { model: BoardMember, include: [User] },
-          { model: List },
-        ],
-      });
+  //     const boards = await Board.findAll({});
 
-      res.status(200).json(boards);
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     res.status(200).json(boards);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
   static async getBoardById(req, res, next) {
     try {
       const { id } = req.params;
       const board = await Board.findByPk(id, {
-        include: [
-          { model: BoardMember, include: [User] },
-          { model: List },
-        ],
+        include: [{ model: BoardMember, include: [User] }, { model: List }],
       });
 
       if (!board) {
@@ -58,7 +49,7 @@ class boardController {
   static async addBoardMember(req, res, next) {
     try {
       const { boardId, userId } = req.body;
-      
+
       const board = await Board.findByPk(boardId);
       if (!board) {
         return res.status(404).json({ message: "Board not found" });

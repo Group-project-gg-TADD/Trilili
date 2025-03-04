@@ -1,0 +1,14 @@
+[
+    {
+        "name":"Membuat aplikasi ppdb",
+        "ownerId":1
+    },
+    {
+        "name":"Membuat acara CSR",
+        "ownerId":2
+    },
+    {
+        "name":"Membuat acara hari Pahlawan",
+        "ownerId":3
+    }
+]
