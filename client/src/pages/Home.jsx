@@ -1,5 +1,8 @@
+import socket from "../config/socket";
+
 export default function Home() {
-  return <>
-    
-  </>;
+  console.log(socket);
+
+  return <></>;
 }
+

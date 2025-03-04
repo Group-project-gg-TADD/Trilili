@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -81,12 +81,13 @@ export default function Navbar() {
                   >
                     Dashboard
                   </a>
-                  <a
+                  <NavLink
+                    to={"/comment"}
                     href="#"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
-                    Team
-                  </a>
+                    Comment
+                  </NavLink>
                   <a
                     href="#"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
