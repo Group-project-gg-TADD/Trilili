@@ -6,7 +6,7 @@ class cardController {
             const {listId} = req.params;
             const data = await Card.findAll({
                 where: {
-                    ListId: listId
+                    listId: listId
                 }
             });
             res.status(200).json(data);
@@ -18,13 +18,14 @@ class cardController {
     static async addCard (req,res,next){
         try {
             const {listId} = req.params
-            const {title, description, dueDate, status} = req.body
+            const {title, description, dueDate, status, imgUrl} = req.body
             const data = await Card.create({
                 title,
                 description,
                 listId,
                 dueDate,
-                status
+                status,
+                imgUrl
             })
             res.status(201).json(data)
 
