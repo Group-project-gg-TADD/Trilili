@@ -7,6 +7,7 @@ export default function AuthLayout() {
   if (token) {
     return (
       <>
+        <Navbar />
         <Outlet />
         <ToastContainer />
       </>

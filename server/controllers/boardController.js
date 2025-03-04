@@ -21,7 +21,11 @@ class boardController {
     try {
       // const userId = req.user.id;
 
-      const boards = await Board.findAll({});
+      const boards = await Board.findAll({
+        include: {
+          model: List,
+        },
+      });
 
       res.status(200).json(boards);
     } catch (error) {
