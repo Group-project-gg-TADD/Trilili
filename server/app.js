@@ -26,12 +26,9 @@ app.get("/board", Controller.getBoard)
 
 app.use(authentication);
 
-<<<<<<< HEAD
 app.get("/card/:listId", cardController.getCard);
 app.post("/card/:listId", cardController.addCard);
 
-=======
->>>>>>> b80bf7d573a63ba63fbc29a2ca3c74cc00e4e1e8
 app.use(errorHandler);
 
 app.listen(port, () => {
