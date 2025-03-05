@@ -2,6 +2,7 @@ import axios from "../config/axiosInstance";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import ListCard from "../components/ListCard";
+import { closestCorners, DndContext } from "@dnd-kit/core";
 
 export default function Board() {
   const [list, setList] = useState([]);
@@ -34,7 +35,6 @@ export default function Board() {
         },
       });
 
-
       setList([...list, data]);
       setNewListName("");
     } catch (error) {
@@ -46,13 +46,26 @@ export default function Board() {
     fetchList();
   }, []);
 
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over) return;
 
+    const cardId = active.id;
+    const listId = over.id;
+
+    // ambil data list yg lama berdasarkan id, active.data.current.listId
+    // hapus cardId dair list lama
+    // tambahkan data active.data.current ke list baru
+
+    // axios ke api nya tim buat update list card id
+  };
 
   return (
     <>
-
       <div className="container mx-auto p-4">
-        <h1 style={{ marginBottom: "10px" }} className="text-2xl font-bold">Add your list</h1>
+        <h1 style={{ marginBottom: "10px" }} className="text-2xl font-bold">
+          Add your list
+        </h1>
         <input
           style={{ marginRight: "10px" }}
           type="text"
@@ -69,13 +82,15 @@ export default function Board() {
         </button>
       </div>
 
-      <div className="container mx-auto p-4">
-        <div className="flex gap-4 overflow-x-auto">
-          {list.map((el) => (
-            <ListCard key={el.id} el={el} />
-          ))}
+      <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+        <div className="container mx-auto p-4">
+          <div className="flex gap-4 overflow-x-auto">
+            {list.map((el) => (
+              <ListCard key={el.id} el={el} />
+            ))}
+          </div>
         </div>
-      </div>
+      </DndContext>
     </>
   );
 }
