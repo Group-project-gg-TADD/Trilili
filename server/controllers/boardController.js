@@ -77,13 +77,13 @@ class boardController {
   static async getBoardByIdMembers(req, res, next) {
     try {
       const boardMembers = await BoardMember.findAll({
-        where: { userId: req.params.id },
+        where: { userId: req.user.id },
         include: Board
       });
 
       res.status(200).json(boardMembers);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }
