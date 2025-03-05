@@ -1,4 +1,4 @@
-const {List, Board} = require("../models")
+const {List, Card, Board} = require("../models")
 
 class listController{
     static async getList(req, res, next){
