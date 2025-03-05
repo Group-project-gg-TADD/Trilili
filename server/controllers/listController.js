@@ -4,7 +4,7 @@ class listController{
     static async getList(req, res, next){
         try {
             const {boardId} = req.params
-            const board = await Board.findByPK(boardId)
+            const board = await Board.findByPk(boardId)
 
             if(!board){
                 return res.status(404).json({message: "Board not found"})

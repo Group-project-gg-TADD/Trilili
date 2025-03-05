@@ -77,6 +77,7 @@ const DroppableList = ({ list, index, onCardDrop }) => {
 const Main = () => {
   const { allboard, setAllBoard } = useContext(BoardContext);
   const bdata = allboard.boards[allboard.active];
+  console.log(bdata);
 
 
   {
