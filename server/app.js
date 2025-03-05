@@ -77,7 +77,7 @@ app.get("/board/:id", boardController.getBoardById);
 app.post("/board/member", boardController.addBoardMember);
 
 app.get("/list/:boardId", listController.getList)
-app.post("/list", listController.addList)
+app.post("/list/:boardId", listController.addList)
 
 app.get("/card/:listId", cardController.getCard);
 app.post("/card/:listId", cardController.addCard);
