@@ -52,16 +52,17 @@ io.on("connection", (socket) => {
     });
   });
 
-
-//2. teruma event join socket comment
+  //2. teruma event join socket comment
   socket.on("card/join_comment", (arg) => {
-
     //3. joinkan user sekarang ke room card_comment_1
-    socket.join("card_comment_" + arg.cardId)
+    socket.join("card_comment_" + arg.cardId);
 
     //4. kasih info ke smua member room, bahwa ada yg join
-    io.to("card_comment_" + arg.cardId).emit("comment/message", "welcome to room " + "card_comment_" + arg.cardId)
-  })
+    io.to("card_comment_" + arg.cardId).emit(
+      "comment/message",
+      "welcome to room " + "card_comment_" + arg.cardId
+    );
+  });
 
   socket.on("disconnect", () => {
     console.log(socket.id, "<<< new user disconnect");
@@ -94,12 +95,12 @@ app.post("/board", boardController.addBoard);
 app.get("/board", boardController.getBoards);
 app.get("/board/:id", boardController.getBoardById);
 app.post("/board/member", boardController.addBoardMember);
-app.get('/users/board', boardController.getBoardByIdMembers)
+app.get("/users/board", boardController.getBoardByIdMembers);
 
 app.get("/list/:boardId", listController.getList);
 app.post("/list/:boardId", listController.addList);
 
-app.patch("/card/:listId", cardController.updateCard);
+app.patch("/card/:id", cardController.updateCard);
 
 app.get("/card/:listId", cardController.getCard);
 app.post("/card/:listId", cardController.addCard);

@@ -46,18 +46,56 @@ export default function Board() {
     fetchList();
   }, []);
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = async (event) => {
     const { active, over } = event;
     if (!over) return;
 
     const cardId = active.id;
     const listId = over.id;
 
-    // ambil data list yg lama berdasarkan id, active.data.current.listId
-    // hapus cardId dair list lama
-    // tambahkan data active.data.current ke list baru
+    // Find the old list based on active.data.current.listId
+    const oldListId = active.data.current.listId;
 
-    // axios ke api nya tim buat update list card id
+    // Remove cardId from the old list
+    const updatedOldList = list.map((list) => {
+      if (list.id === oldListId) {
+        return {
+          ...list,
+          Cards: list.Cards.filter((card) => card.id !== cardId),
+        };
+      }
+      return list;
+    });
+
+    // Add active.data.current to the new list
+    const updatedNewList = updatedOldList.map((list) => {
+      if (list.id === listId) {
+        return {
+          ...list,
+          Cards: [...list.Cards, active.data.current],
+        };
+      }
+      return list;
+    });
+
+    // Update the state with the new lists
+    setList(updatedNewList);
+
+    // Make an API call to update the card's listId
+    try {
+      const { data } = await axios({
+        method: "PATCH",
+        url: `/card/${cardId}`,
+        data: { targetList: listId },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log(data);
+      fetchList();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
