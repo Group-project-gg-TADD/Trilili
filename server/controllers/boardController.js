@@ -64,6 +64,20 @@ class boardController {
     }
   }
 
+  static async getUser(req, res, next) {
+    try {
+
+      const user = await User.findAll({
+        attributes: { exclude: ['password'] }
+      });
+      res.status(200).json(user);
+      
+    } catch (error) {
+      next(error);
+      
+    }
+  }
+
   static async addBoardMember(req, res, next) {
     try {
       const { boardId, userId } = req.body;

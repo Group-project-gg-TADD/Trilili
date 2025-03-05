@@ -66,6 +66,7 @@ export default function Boardes() {
         },
       });
       console.log(data);
+      fetchBoards();
     } catch (error) {
       toast.error(error.response.data.message);
       console.log(error);

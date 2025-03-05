@@ -111,6 +111,7 @@ app.get("/boardMembers", async (req, res, next) => {
 });
 
 app.post("/board/member", boardController.addBoardMember);
+app.get ("/user", boardController.getUser);
 
 app.get("/users/board", boardController.getBoardByIdMembers);
 
