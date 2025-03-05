@@ -38,7 +38,7 @@ export default function Board() {
         },
       });
 
-      setList([...list, data]);
+      setList([...list, { ...data, Cards: [] }]);
       setNewListName("");
     } catch (error) {
       console.error(error);
@@ -133,11 +133,6 @@ export default function Board() {
             </div>
           </div>
         </DndContext>
-      </div>
-
-      {/* TOMBOL COMMENT  */}
-      <div>
-        <Comment boardId={id} />
       </div>
     </>
   );

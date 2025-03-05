@@ -1,11 +1,19 @@
 import { useDroppable } from "@dnd-kit/core";
 import CardItem from "./CardItem";
+import { useState } from "react";
+import AddCardForm from "./AddCardForm";
 
 export default function ListCard(props) {
-    const { el } = props;
+    const { el, fetchList } = props;
     const { setNodeRef, isOver } = useDroppable({
         id: el.id,
     });
+
+    const [cards, setCards] = useState(el.Cards || []);
+
+    const handleCardAdded = (newCard) => {
+        setCards([...cards, newCard]);
+    };
 
     return (
         <div
@@ -24,6 +32,7 @@ export default function ListCard(props) {
                     return <CardItem key={card.id} item={card} />;
                 })}
             </div>
+            <AddCardForm listId={el.id} fetchList={fetchList} onCardAdded={handleCardAdded} />
         </div>
     );
 }
