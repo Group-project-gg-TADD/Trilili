@@ -73,6 +73,19 @@ class boardController {
       next(error);
     }
   }
+
+  static async getBoardByIdMembers(req, res, next) {
+    try {
+      const boardMembers = await BoardMember.findAll({
+        where: { userId: req.params.id },
+        include: Board
+      });
+
+      res.status(200).json(boardMembers);
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = boardController;
