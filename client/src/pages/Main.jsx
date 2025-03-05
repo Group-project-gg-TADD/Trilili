@@ -79,6 +79,17 @@ const Main = () => {
   const bdata = allboard.boards[allboard.active];
   console.log(bdata);
 
+
+  {
+    boards: {
+      idboard: {
+        list: [
+          { id, title, items: [] }
+        ]
+      }
+    }
+  }
+
   const onDragEnd = (event) => {
     const { active, over } = event;
     if (!over) return;
