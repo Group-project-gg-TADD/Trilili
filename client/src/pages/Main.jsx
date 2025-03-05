@@ -78,6 +78,17 @@ const Main = () => {
   const { allboard, setAllBoard } = useContext(BoardContext);
   const bdata = allboard.boards[allboard.active];
 
+
+  {
+    boards: {
+      idboard: {
+        list: [
+          { id, title, items: [] }
+        ]
+      }
+    }
+  }
+
   const onDragEnd = (event) => {
     const { active, over } = event;
     if (!over) return;
