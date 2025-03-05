@@ -1,43 +1,44 @@
 import { useEffect, useState } from "react";
 import socket from "../config/socket";
-import { useParams } from "react-router";
 
-export default function Comment() {
+export default function Comment({ boardId }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const { cardId } = useParams();
+  console.log(onlineUsers);
 
   useEffect(() => {
     //1. component dibuka, langsung request join socket comment
-    socket.emit("card/join_comment", { cardId });
+    socket.emit("board/join", { boardId });
 
     socket.on("users/online", (args) => {
       setOnlineUsers(args);
     });
 
-    socket.on("chat/update_message", (msgObj) => {
+    socket.on("board/update_message", (msgObj) => {
       setMessages((lastMessages) => [...lastMessages, msgObj]);
     });
 
-
     // 5. nanti kalo ada yg emit event ini, dari room comment
     // bakalo dimunculin alert
-    socket.on("comment/message", (msgObj) => {
-      alert("msg: " + msgObj);
-    });
+    // socket.on("chat/new_message", (msgObj) => {
+    //   alert("msg: " + msgObj);
+    //   console.log(msgObj);
+    // });
 
     return () => {
       socket.off("users/online");
-      socket.off("chat/update_message");
-      socket.off("comment/message");
+      socket.off("board/update_message");
     };
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
-    socket.emit("chat/new_message", newMessage);
+    socket.emit("board/new_message", {
+      boardId,
+      newMessage,
+    });
     setNewMessage("");
   };
 

@@ -2,7 +2,7 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-const { Board } = require("./models");
+const { Board, User, BoardMember } = require("./models");
 
 const express = require("express");
 const app = express();
@@ -31,13 +31,14 @@ function updateOnlineUsers(io) {
 }
 
 // connection -> event bawaan socket.io
-io.on("connection", (socket) => {
-  console.log(socket.id, ">>>", socket.handshake.auth, "<<< auth user connect");
+io.on("connection", async (socket) => {
+  // console.log(socket.id, ">>>", socket.handshake.auth, "<<< auth user connect");
   updateOnlineUsers(io);
 
   let user;
   if (socket.handshake.auth.token) {
-    user = verifyToken(socket.handshake.auth.token);
+    payload = verifyToken(socket.handshake.auth.token);
+    user = await User.findByPk(payload.id);
   }
 
   console.log(user, `USER SOCKET`);
@@ -45,22 +46,22 @@ io.on("connection", (socket) => {
   // Kirim pesan ke orang yg join
   socket.emit("welcome_message", "Hi brader " + socket.id);
 
-  socket.on("chat/new_message", (msg) => {
-    io.emit("chat/update_message", {
-      message: msg,
-      sender: socket.handshake.auth?.username,
+  socket.on("board/new_message", ({ boardId, newMessage }) => {
+    io.to("board/" + boardId).emit("board/update_message", {
+      message: newMessage,
+      sender: user?.name,
     });
   });
 
   //2. teruma event join socket comment
-  socket.on("card/join_comment", (arg) => {
-    //3. joinkan user sekarang ke room card_comment_1
-    socket.join("card_comment_" + arg.cardId);
+  socket.on("board/join", (arg) => {
+    //3. joinkan user sekarang ke room board/1
+    socket.join("board/" + arg.boardId);
 
     //4. kasih info ke smua member room, bahwa ada yg join
-    io.to("card_comment_" + arg.cardId).emit(
-      "comment/message",
-      "welcome to room " + "card_comment_" + arg.cardId
+    io.to("board/" + arg.boardId).emit(
+      "chat/new_message",
+      "welcome to room " + "board/" + arg.boardId
     );
   });
 
@@ -91,15 +92,31 @@ app.post("/login", userController.login);
 
 app.use(authentication);
 app.post("/board", boardController.addBoard);
-
-
 app.get("/board", boardController.getBoards);
+
 app.get("/board/:id", boardController.getBoardById);
+app.get("/board/member", boardController.getBoardMember);
+app.get("/boardMembers", async (req, res, next) => {
+  try {
+    const data = await BoardMember.findAll({
+      where: { userId: req.user.id },
+      include: {
+        model: Board,
+      },
+    });
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.post("/board/member", boardController.addBoardMember);
+
 app.get("/users/board", boardController.getBoardByIdMembers);
 
 app.get("/list/:boardId", listController.getList);
 app.post("/list/:boardId", listController.addList);
+app.delete("/list/delete/:id", listController.deleteList)
 
 app.patch("/card/:id", cardController.updateCard);
 
