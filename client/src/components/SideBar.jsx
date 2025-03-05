@@ -14,6 +14,7 @@ const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [showpop, setShowpop] = useState(false);
     const { allboard, setAllBoard } = useContext(BoardContext);
+
     const setActiveboard = (i) => {
         let newBoard = { ...allboard }
         newBoard.active = i;

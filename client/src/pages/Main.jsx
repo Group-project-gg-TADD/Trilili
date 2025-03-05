@@ -9,13 +9,15 @@ import CardAdd from '../components/CardAdd';
 import Utils from '../utils/Utils';
 
 const DraggableItem = ({ item }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useDraggable({
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useDraggable({
         id: item.id,
     });
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
+        opacity: isDragging ? 0.5 : 1,
+        scale: isDragging ? 0.9 : 1,
     };
 
     return (
