@@ -56,6 +56,7 @@ const { authentication } = require("./middlewares/authentication");
 const { errorHandler } = require("./middlewares/errorHandler");
 const boardController = require("./controllers/boardController");
 const cardController = require("./controllers/cardController");
+const listController = require("./controllers/listController");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -74,6 +75,9 @@ app.post("/board", boardController.addBoard);
 app.get("/board", boardController.getBoards);
 app.get("/board/:id", boardController.getBoardById);
 app.post("/board/member", boardController.addBoardMember);
+
+app.get("/list/:boardId", listController.getList)
+app.post("/list/:boardId", listController.addList)
 
 app.get("/card/:listId", cardController.getCard);
 app.post("/card/:listId", cardController.addCard);

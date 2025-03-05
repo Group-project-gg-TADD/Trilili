@@ -14,10 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: "Name is required"
+          msg: "List name is required"
         },
         notEmpty: {
-          msg: "Name is required"
+          msg: "List name is required"
         },
       }
     },
