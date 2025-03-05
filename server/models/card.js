@@ -4,10 +4,8 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Card extends Model {
-
     static associate(models) {
       Card.hasMany(models.List, { foreignKey: "listId" })
-
     }
   }
   Card.init({

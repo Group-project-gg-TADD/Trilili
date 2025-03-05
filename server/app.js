@@ -24,13 +24,22 @@ app.post("/register", userController.register);
 app.post("/login", userController.login);
 
 app.use(authentication);
+
+// BOARD -> LIST -> CARD
+
+// patch list id di card
+
 app.post("/board", boardController.addBoard);
 app.get("/board", boardController.getBoards);
 app.get("/board/:id", boardController.getBoardById);
 app.post("/board/member", boardController.addBoardMember);
 
+
+
 app.get("/card/:listId", cardController.getCard);
 app.post("/card/:listId", cardController.addCard);
+
+
 
 app.use(errorHandler);
 
