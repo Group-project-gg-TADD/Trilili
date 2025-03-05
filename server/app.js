@@ -99,6 +99,7 @@ app.get("/users/board", boardController.getBoardByIdMembers);
 
 app.get("/list/:boardId", listController.getList);
 app.post("/list/:boardId", listController.addList);
+app.delete("/list/delete/:id", listController.deleteList)
 
 app.patch("/card/:id", cardController.updateCard);
 

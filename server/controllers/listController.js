@@ -41,6 +41,19 @@ class listController {
       next(error);
     }
   }
+  static async deleteList(req,res,next){
+    try {
+      const { id } = req.params;
+      const list = await List.findByPk(id);
+      if (!list) {
+        return res.status(404).json({ message: "List not found" });
+      }
+      await list.destroy();
+      res.status(200).json({ message: "List deleted" });
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = listController;
