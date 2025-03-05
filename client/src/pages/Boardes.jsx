@@ -2,10 +2,33 @@ import axios from "../config/axiosInstance";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CardBoardes from "../components/CardBoardes";
+import CardBoardsMember from "../components/CardBoardsMember";
 
 export default function Boardes() {
   const [boards, setBoards] = useState([]);
   const [nameBoard, setNameBoard] = useState("");
+  const [boardsMember, setBoardsMember] = useState([]);
+
+  const fetchBoardsMember = async () => {
+    try {
+      const { data } = await axios({
+        method: "GET",
+        url: "/boardMembers",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log(data, "memberrr");
+      setBoardsMember(data);
+    } catch (error) {
+      toast.error(error.response.data.message);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBoardsMember();
+  }, []);
 
   const fetchBoards = async () => {
     try {
@@ -83,6 +106,11 @@ export default function Boardes() {
             <CardBoardes board={board} key={board.id} />
           ))}
         </div>
+        <br />
+        <hr />
+        {boardsMember.map((boardMember) => (
+          <CardBoardsMember boardMember={boardMember} key={boardMember.id} />
+        ))}
       </div>
     </>
   );
