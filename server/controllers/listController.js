@@ -25,8 +25,16 @@ class listController{
             const {name} = req.body
 
             if(!name){
-                return res.status(400)
+                return res.status(400).json({message: "List name is required"})
             }
+
+            const board = await Board.findByPK(boardId)
+            if(!board){
+                return res.status(404).json({messae: "Board not found"})
+            }
+
+            const newList = await List.create({name, boardId})
+            res.status(201).json(newList)
         } catch (error) {
             next(error)
         }
