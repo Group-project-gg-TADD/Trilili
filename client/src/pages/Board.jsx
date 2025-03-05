@@ -35,7 +35,7 @@ export default function Board() {
         },
       });
 
-      setList([...list, data]);
+      setList([...list, { ...data, Cards: [] }]);
       setNewListName("");
     } catch (error) {
       console.error(error);
@@ -124,7 +124,7 @@ export default function Board() {
         <div className="container mx-auto p-4">
           <div className="flex gap-4 overflow-x-auto">
             {list.map((el) => (
-              <ListCard key={el.id} el={el} />
+              <ListCard fetchList={fetchList} key={el.id} el={el} />
             ))}
           </div>
         </div>
