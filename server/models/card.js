@@ -39,14 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER, 
       allowNull: false
     },
-    dueDate: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    imgUrl: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   }, {
     sequelize,
     modelName: 'Card',
