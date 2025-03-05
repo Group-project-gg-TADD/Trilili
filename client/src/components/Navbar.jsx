@@ -81,13 +81,13 @@ export default function Navbar() {
                   >
                     Home
                   </NavLink>
-                  <NavLink
+                  {/* <NavLink
                     to={"/comment"}
                     href="#"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                   >
                     Comment
-                  </NavLink>
+                  </NavLink> */}
                   {/* <NavLink
                     to={"/project"}
                     href="#"

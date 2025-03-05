@@ -1,8 +1,9 @@
 import axios from "../config/axiosInstance";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
 import ListCard from "../components/ListCard";
 import { closestCorners, DndContext } from "@dnd-kit/core";
+import Comment from "./Comment";
 
 export default function Board() {
   const [list, setList] = useState([]);
@@ -18,6 +19,8 @@ export default function Board() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
+      console.log(data, "tessss<<<<");
+
       setList(data);
     } catch (error) {
       console.log(error);
@@ -118,17 +121,24 @@ export default function Board() {
         >
           Add List
         </button>
+        <DndContext
+          collisionDetection={closestCorners}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="container mx-auto mt-4">
+            <div className="flex gap-4 overflow-x-auto">
+              {list.map((el) => (
+                <ListCard key={el.id} el={el} />
+              ))}
+            </div>
+          </div>
+        </DndContext>
       </div>
 
-      <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-        <div className="container mx-auto p-4">
-          <div className="flex gap-4 overflow-x-auto">
-            {list.map((el) => (
-              <ListCard key={el.id} el={el} />
-            ))}
-          </div>
-        </div>
-      </DndContext>
+      {/* TOMBOL COMMENT  */}
+      <div>
+        <Comment boardId={id} />
+      </div>
     </>
   );
 }

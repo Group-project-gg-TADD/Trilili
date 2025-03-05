@@ -1,6 +1,17 @@
 const { Board, BoardMember, User, List } = require("../models");
 
 class boardController {
+  static async getBoardMember(req, res, next) {
+    try {
+      const data = await BoardMember.findAll({
+        where: { userId: req.user.id },
+      });
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async addBoard(req, res, next) {
     try {
       const { name } = req.body;
@@ -78,7 +89,7 @@ class boardController {
     try {
       const boardMembers = await BoardMember.findAll({
         where: { userId: req.user.id },
-        include: Board
+        include: Board,
       });
 
       res.status(200).json(boardMembers);
