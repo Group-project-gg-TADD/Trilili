@@ -11,7 +11,8 @@ class listController{
             }
 
             const lists = await List.findAll({
-                where: {boardId}
+                where: {boardId},
+                include: {model: Card}
             })
             res.status(200).json(lists)
         } catch (error) {
