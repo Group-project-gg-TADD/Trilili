@@ -23,7 +23,7 @@ createRoot(document.getElementById("root")).render(
       <Route element={<AuthLayout />}>
         <Route path="/" element={<Boardes />} />
         <Route path="/project" element={<Project />} />
-        <Route path="/comment" element={<Comment />} />
+        <Route path="/comment/:cardId" element={<Comment />} />
         <Route path="/board/:id" element={<Board />} />
       </Route>
     </Routes>

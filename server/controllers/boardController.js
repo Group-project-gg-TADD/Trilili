@@ -22,6 +22,9 @@ class boardController {
       // const userId = req.user.id;
 
       const boards = await Board.findAll({
+        where: {
+          ownerId: req.user.id,
+        },
         include: {
           model: List,
         },

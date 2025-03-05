@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import socket from "../config/socket";
+import { useParams } from "react-router";
 
 export default function Comment() {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const { cardId } = useParams();
 
   useEffect(() => {
+    //1. component dibuka, langsung request join socket comment
+    socket.emit("card/join_comment", { cardId });
+
     socket.on("users/online", (args) => {
       setOnlineUsers(args);
     });
@@ -15,9 +20,17 @@ export default function Comment() {
       setMessages((lastMessages) => [...lastMessages, msgObj]);
     });
 
+
+    // 5. nanti kalo ada yg emit event ini, dari room comment
+    // bakalo dimunculin alert
+    socket.on("comment/message", (msgObj) => {
+      alert("msg: " + msgObj);
+    });
+
     return () => {
       socket.off("users/online");
       socket.off("chat/update_message");
+      socket.off("comment/message");
     };
   }, []);
 
