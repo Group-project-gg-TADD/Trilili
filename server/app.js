@@ -75,6 +75,7 @@ app.post("/board", boardController.addBoard);
 app.get("/board", boardController.getBoards);
 app.get("/board/:id", boardController.getBoardById);
 app.post("/board/member", boardController.addBoardMember);
+app.get('/board/member', boardController.getBoardByIdMembers)
 
 app.get("/list/:boardId", listController.getList)
 app.post("/list/:boardId", listController.addList)
