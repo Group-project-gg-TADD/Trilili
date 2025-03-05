@@ -8,6 +8,8 @@ import Comment from "./Comment";
 export default function Board() {
   const [list, setList] = useState([]);
   const [newListName, setNewListName] = useState("");
+  const [user, setUser] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
   const { id } = useParams();
 
   async function fetchList() {
@@ -101,6 +103,54 @@ export default function Board() {
     }
   };
 
+
+  async function fecthUser() {
+    try {
+
+      const { data } = await axios({
+        method: "GET",
+        url: "/user",
+        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
+      })
+      console.log(data, "<<< data user");
+      setUser(data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fecthUser();
+  }, [])
+
+
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    if (!selectedUser) {
+      alert("Please select a user to add.");
+      return;
+    }
+
+    try {
+      await axios({
+        method: "POST",
+        url: `/board/member`,
+        data: {
+          userId: selectedUser,
+          boardId: id
+        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
+      });
+
+      alert("Member added successfully!");
+      setSelectedUser(""); // Reset dropdown selection
+    } catch (error) {
+      console.error(error);
+      alert("Failed to add member.");
+    }
+  };
+
   return (
     <>
       <div className="container mx-auto p-4">
@@ -128,11 +178,37 @@ export default function Board() {
           <div className="container mx-auto mt-4">
             <div className="flex gap-4 overflow-x-auto">
               {list.map((el) => (
-                <ListCard key={el.id} el={el} />
+                <ListCard key={el.id} el={el} fetchList={fetchList} />
               ))}
             </div>
           </div>
         </DndContext>
+      </div>
+
+      <div className="mt-6 p-4 border border-gray-300 rounded-lg shadow-md bg-white">
+        <h2 className="text-xl font-semibold mb-2">Add Member</h2>
+        <form onSubmit={handleAddMember} className="flex flex-col gap-3">
+          <select
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            className="border p-2 rounded"
+          >
+            <option value="" disabled>Select a user</option>
+            {user.map((el) => (
+              <option key={el.id} value={el.id}>{el.name}</option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+          >
+            Add Member
+          </button>
+        </form>
+      </div>
+
+      <div>
+        <Comment boardId={id} />
       </div>
     </>
   );
