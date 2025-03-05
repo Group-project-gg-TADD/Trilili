@@ -21,7 +21,12 @@ class listController{
 
     static async addList(req, res, next){
         try {
-            
+            const {boardId} = req.params
+            const {name} = req.body
+
+            if(!name){
+                return res.status(400)
+            }
         } catch (error) {
             next(error)
         }
