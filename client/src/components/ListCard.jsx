@@ -1,28 +1,31 @@
 import { useEffect, useState } from "react";
 import axios from "../config/axiosInstance";
+import { useParams } from "react-router";
 
-export default function ListCard(props) {
-    const { el, key } = props
+export default function AddListCard(props) {
+    const { id } = useParams();
+    const [ListCard, setListCard] = useState([]);
+    const [newListCard, setNewListCard] = useState("");
+    console.log(ListCard, "ListCard");
 
-    const [cards, setCards] = useState([]);
-
-    async function fetchCards() {
+    async function fetchListCards() {
         try {
             const { data } = await axios({
-                method: "GET",
-                url: `/card/${el.id}`, // Ambil Card berdasarkan listId
+                method: "POST",
+                url: `/card/${id}`,
+                data: { name: newListCard },
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
             });
-            setCards(data);
+            setListCard(data);
         } catch (error) {
             console.error(error);
         }
     }
 
     useEffect(() => {
-        fetchCards();
+        fetchListCards();
     }, []);
 
 
