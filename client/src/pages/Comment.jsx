@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import socket from "../config/socket";
+import loadGemini from '../config/geminiAi'
 
 export default function Comment({ boardId }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -32,15 +33,32 @@ export default function Comment({ boardId }) {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
+  
+    const gemini = await loadGemini();
+    const prompt =
+      "Could you please transform the following text to be more corporate-friendly and constructive? Please return the result directly into 1 sentence. Return the most relevant option if there are multiple options.";
+    const result = await gemini.generateContent([prompt, newMessage]);
+  
+    // Extract text from Gemini's response
+    const transformedMessage =
+      result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || newMessage;
+  
+    console.log("Transformed Message:", transformedMessage);
+  
     socket.emit("board/new_message", {
       boardId,
-      newMessage,
+      newMessage: transformedMessage,
     });
-    setNewMessage("");
+  
+    setTimeout(() => {
+      setNewMessage("");
+    }, 100);
   };
+  
+  
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg h-screen flex flex-col">
