@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Comment from "./pages/Comment";
 import Project from "./pages/Project";
 import Boardes from "./pages/Boardes";
+import Board from "./pages/Board";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")).render(
         <Route path="/" element={<Boardes />} />
         <Route path="/project" element={<Project />} />
         <Route path="/comment" element={<Comment />} />
+        <Route path="/board/:id" element={<Board />} />
       </Route>
     </Routes>
   </BrowserRouter>
