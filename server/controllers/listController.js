@@ -29,7 +29,7 @@ class listController{
                 return res.status(400).json({message: "List name is required"})
             }
 
-            const board = await Board.findByPK(boardId)
+            const board = await Board.findByPk(boardId)
             if(!board){
                 return res.status(404).json({messae: "Board not found"})
             }
