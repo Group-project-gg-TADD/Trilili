@@ -18,17 +18,32 @@ class cardController {
     static async addCard (req,res,next){
         try {
             const {listId} = req.params
-            const {title, description, dueDate, status, imgUrl} = req.body
+            const {title, description} = req.body
             const data = await Card.create({
                 title,
                 description,
-                listId,
-                dueDate,
-                status,
-                imgUrl
+                listId
             })
             res.status(201).json(data)
 
+        } catch (error) {
+            console.log(error);
+            next(error)
+        }
+    }
+    static async updateCard(req,res,next){
+        try {
+            const {listId} = req.params
+            const {targetList} = req.body
+            const data = await Card.update({
+                listId: +targetList
+            },{
+                where: {
+                    listId: listId
+                },
+                returning: true
+            })
+            res.status(200).json(data[1][0])
         } catch (error) {
             console.log(error);
             next(error)

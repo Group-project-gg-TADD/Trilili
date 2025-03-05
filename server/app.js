@@ -99,6 +99,8 @@ app.get('/users/board', boardController.getBoardByIdMembers)
 app.get("/list/:boardId", listController.getList);
 app.post("/list/:boardId", listController.addList);
 
+app.patch("/card/:listId", cardController.updateCard);
+
 app.get("/card/:listId", cardController.getCard);
 app.post("/card/:listId", cardController.addCard);
 
