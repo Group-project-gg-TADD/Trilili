@@ -1,5 +1,5 @@
 import axios from "../config/axiosInstance";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 export default function AddCardForm({ listId, onCardAdded, fetchList }) {
@@ -42,29 +42,26 @@ export default function AddCardForm({ listId, onCardAdded, fetchList }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mt-4">
-          <input
-            type="text"
-            placeholder="Card Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border rounded-md focus:ring-2 focus:ring-[#85C1E9]"
-          />
-          <textarea
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border rounded-md mt-2 focus:ring-2 focus:ring-[#85C1E9]"
-          />
-          <button
-            type="submit"
-            className="w-full bg-[#2C3E50] text-white p-2 rounded-md hover:bg-[#85C1E9] hover:text-[#2C3E50] mt-2 transition"
-            disabled={loading}
-          >
-            {loading ? "Adding..." : "Add Card"}
-          </button>
-        </form>
-      );
+        <form onSubmit={handleSubmit} className="space-y-4">
+    <input
+        type="text"
+        placeholder="Card Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-[#85C1E9]"
+    />
+    <textarea
+        placeholder="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        className="w-full p-2 border rounded-md mt-2 focus:ring-2 focus:ring-[#85C1E9]"
+    />
+    
+    {/* Hidden Submit Button (biar bisa di-trigger klik dari modal) */}
+    <button id="addCardSubmit" type="submit" className="hidden"></button>
+</form>
+
+    );
 
     // return (
     //     <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-2">

@@ -7,14 +7,31 @@ import { toast } from "react-toastify";
 
 export default function Navbar({ fetchBoards }) {  // ✅ Ensure fetchBoards is received as a prop
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowkModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [nameBoard, setNameBoard] = useState("");
+  const [boardes, setBoardes] = useState([])
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     navigate("/login");
   };
+
+  const fetchBoardes = async () => {
+    try {
+      const { data } = await axios({
+        method: "GET",
+        url: "/board",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        }
+      })
+      setBoardes(data)
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+
 
   const handleAddBoard = async (e) => {
     e.preventDefault();
@@ -33,6 +50,8 @@ export default function Navbar({ fetchBoards }) {  // ✅ Ensure fetchBoards is 
       if (typeof fetchBoards === "function") {
         fetchBoards(); // ✅ Ensure fetchBoards is called only if it exists
       }
+
+      fetchBoardes()
       
       setShowModal(false);
       setNameBoard("");
