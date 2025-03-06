@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import socket from "../config/socket";
-import loadGemini from '../config/geminiAi'
-import { useRef } from "react";
+import axios from '../config/axiosInstance';
 
 export default function Comment({ boardId }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const userId = localStorage.getItem("userId"); // Get userId from localStorage
   const [showChat, setShowChat] = useState(false);
   console.log(onlineUsers);
   const chatBoxRef = useRef(null)
@@ -23,44 +23,36 @@ export default function Comment({ boardId }) {
       setMessages((lastMessages) => [...lastMessages, msgObj]);
     });
 
-    // 5. nanti kalo ada yg emit event ini, dari room comment
-    // bakalo dimunculin alert
-    // socket.on("chat/new_message", (msgObj) => {
-    //   alert("msg: " + msgObj);
-    //   console.log(msgObj);
-    // });
-
     return () => {
       socket.off("users/online");
       socket.off("board/update_message");
     };
-  }, []);
+  }, [boardId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
-  
-    const gemini = await loadGemini();
-    
-    const prompt = `Below is a text in either Bahasa Indonesia or Indonesian Slang. Please transform it to be more corporate-friendly and constructive. Return the result in one sentence in Bahasa Indonesia. If there is no clear meaning, return the original text. If it's highly offensive, return 'Saya ingin berkata kasar'.
-  
-  Text: "${newMessage}"`;
-  
+
     try {
-      const result = await gemini.generateContent(prompt);
-  
-      console.log("Gemini Full Response:", result);
-  
-      const transformedMessage =
-        result.response?.candidates?.[0]?.content?.parts?.[0]?.text || newMessage;
-  
-      console.log("Transformed Message:", transformedMessage);
-  
+      const response = await axios({
+        method: "POST",
+        url: "/comment",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+        data: {
+          content: newMessage,
+          boardId,
+          userId // Pass userId in the request body
+        }
+      });
+      console.log("✅ Message saved to DB:", response.data);
+
       socket.emit("board/new_message", {
         boardId,
-        newMessage: transformedMessage,
+        newMessage: response.data,
       });
-  
+
       setTimeout(() => {
         setNewMessage("");
       }, 100);
@@ -68,8 +60,6 @@ export default function Comment({ boardId }) {
       console.error("Error generating content with Gemini:", error);
     }
   };
-  
-
 
   return (
     <>
