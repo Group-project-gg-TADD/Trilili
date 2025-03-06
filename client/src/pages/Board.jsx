@@ -1,11 +1,10 @@
 import axios from "../config/axiosInstance";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import ListCard from "../components/ListCard";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import Comment from "./Comment";
 import { toast } from "react-toastify";
-import { useRef } from "react";
 
 export default function Board() {
   const [list, setList] = useState([]);
@@ -27,7 +26,7 @@ export default function Board() {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      console.log(data, "tessss<<<<");
+      // console.log(data, "tessss<<<<");
 
       setList(data);
     } catch (error) {
@@ -171,7 +170,7 @@ export default function Board() {
         url: "/user",
         headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
       })
-      console.log(data, "<<< data user");
+      // console.log(data, "<<< data user");
       setUser(data);
 
     } catch (error) {
@@ -216,15 +215,18 @@ export default function Board() {
       fecthUser()
     }, [])
   };
+  
   return (
-    <div className="container mx-auto px-6 py-6">
+    <div className={`container mx-auto px-6 py-6 relative ${showModal || showMemberModal ? "backdrop-blur-md" : ""}`}>
       <h1 className="text-2xl font-bold text-[#2C3E50] text-center mb-6">Board Management</h1>
 
       <div className="flex justify-center space-x-4">
-        <button onClick={() => setShowModal(true)} className="bg-[#2C3E50] text-white px-4 py-2 rounded hover:bg-white hover:text-[#2C3E50] border-2 border-[#2C3E50] transition">
+        <button onClick={() => setShowModal(true)}
+          className="bg-[#2C3E50] text-white px-4 py-2 rounded hover:bg-[#85C1E9] hover:text-[#2C3E50] border-2 border-[#2C3E50] transition">
           + Add List
         </button>
-        <button onClick={() => setShowMemberModal(true)} className="bg-[#2C3E50] text-white px-4 py-2 rounded hover:bg-white hover:text-[#2C3E50] border-2 border-[#2C3E50] transition">
+        <button onClick={() => setShowMemberModal(true)}
+          className="bg-[#2C3E50] text-white px-4 py-2 rounded hover:bg-[#85C1E9] hover:text-[#2C3E50] border-2 border-[#2C3E50] transition">
           + Add Member
         </button>
       </div>
@@ -239,41 +241,63 @@ export default function Board() {
 
       <Comment boardId={id} />
 
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 className="text-lg font-bold text-[#2C3E50] mb-4">Create List</h2>
-            <input type="text" placeholder="List Name" className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]" value={newListName} onChange={(e) => setNewListName(e.target.value)} />
-            <div className="flex justify-end space-x-3 mt-4">
-              <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">Cancel</button>
-              <button onClick={addList} className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">Create</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal Overlay */}
+{(showModal || showMemberModal) && (
+  <div className="fixed inset-0 flex items-center justify-center bg-white/30 backdrop-blur-md z-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+      <h2 className="text-lg font-bold text-[#2C3E50] mb-4">
+        {showModal ? "Create List" : "Add Member"}
+      </h2>
 
-      {showMemberModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 className="text-lg font-bold text-[#2C3E50] mb-4">Add Member</h2>
-            <form onSubmit={handleAddMember}>
-              <select value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)} className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]">
-                <option value="" disabled>Select a user</option>
-                {user.map((el) => (
-                  <option key={el.id} value={el.id}>{el.name}</option>
-                ))}
-              </select>
-              <div className="flex justify-end space-x-3 mt-4">
-                <button onClick={() => setShowMemberModal(false)} className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">Add</button>
-              </div>
-            </form>
+      {showModal ? (
+        <>
+          <input
+            type="text"
+            placeholder="List Name"
+            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]"
+            value={newListName}
+            onChange={(e) => setNewListName(e.target.value)}
+          />
+          <div className="flex justify-end space-x-3 mt-4">
+            <button onClick={() => setShowModal(false)}
+              className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">
+              Cancel
+            </button>
+            <button onClick={addList}
+              className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">
+              Create
+            </button>
           </div>
-        </div>
+        </>
+      ) : (
+        <form onSubmit={handleAddMember}>
+          <select
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]">
+            <option value="" disabled>Select a user</option>
+            {user.map((el) => (
+              <option key={el.id} value={el.id}>{el.name}</option>
+            ))}
+          </select>
+          <div className="flex justify-end space-x-3 mt-4">
+            <button onClick={() => setShowMemberModal(false)}
+              className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">
+              Cancel
+            </button>
+            <button type="submit"
+              className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">
+              Add
+            </button>
+          </div>
+        </form>
       )}
     </div>
+  </div>
+)}
+    </div>
   );
-
+  
   // return (
   //   <>
   //     <div className="container mx-auto p-4">
