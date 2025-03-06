@@ -209,3 +209,84 @@ _Response (200 - OK)_
 
 Request:
 
+- headers
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "boardId": "integer",
+  "userId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string",
+  "Board": {
+    "id": "integer",
+    "name": "string",
+    "createdAt": "string",
+    "updatedAt": "string"
+  }
+}
+```
+
+## 8. POST /board/member
+
+Request:
+
+- headers
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+- body
+
+```json
+{
+  "boardId": "integer",
+  "userId": "integer"
+}
+```
+
+_Response (201 - Created)_
+
+```json
+{
+  "id": "integer",
+  "boardId": "integer",
+  "userId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## 9. GET /users/board
+
+request :
+
+- headers
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
