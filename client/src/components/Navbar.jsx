@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
 import axios from "../config/axiosInstance";
 import logo from "../assets/logo.png";
 import profileIcon from "../assets/profile.png";
 import { toast } from "react-toastify";
+import BoardesContext from "../context1/TodoBoardes";
 
-export default function Navbar({ fetchBoards }) {  // ✅ Ensure fetchBoards is received as a prop
+export default function Navbar() {  // ✅ Ensure fetchBoards is received as a prop
   const navigate = useNavigate();
+  const { boards, setBoards, fetchBoards } = useContext(BoardesContext)
   const [showModal, setShowModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [nameBoard, setNameBoard] = useState("");
@@ -29,11 +31,11 @@ export default function Navbar({ fetchBoards }) {  // ✅ Ensure fetchBoards is 
           name: nameBoard,
         },
       });
-      
-      if (typeof fetchBoards === "function") {
-        fetchBoards(); // ✅ Ensure fetchBoards is called only if it exists
-      }
-      
+
+      // if (typeof fetchBoards === "function") {
+      fetchBoards(); // ✅ Ensure fetchBoards is called only if it exists
+      // }
+
       setShowModal(false);
       setNameBoard("");
     } catch (error) {

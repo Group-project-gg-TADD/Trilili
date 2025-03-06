@@ -1,21 +1,29 @@
 import axios from "../config/axiosInstance";
-import { useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import ListCard from "../components/ListCard";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import Comment from "./Comment";
 import { toast } from "react-toastify";
+import ListCardContext from "../context1/ListCard1";
+import UserContext from "../context1/user";
 
 export default function Board() {
+
+  // const { list, setList, fetchList } = useContext(ListCardContext)
+  // const { newListName, setNewListName, addList } = useContext(ListCardContext)
+  // const { list, setList, fetchList, newListName, setNewListName, addList } = useContext(ListCardContext);
+
+  const [selectedUser, setSelectedUser] = useState("");
+
+  const { id } = useParams();
   const [list, setList] = useState([]);
   const [newListName, setNewListName] = useState("");
-  const [user, setUser] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
-  const { id } = useParams();
+
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false);
   const [showMemberModal, setShowMemberModal] = useState(false);
-  const chatBoxRef = useRef(null); 
+  const chatBoxRef = useRef(null);
 
   async function fetchList() {
     try {
@@ -109,6 +117,9 @@ export default function Board() {
     }
   };
 
+  // const [user, setUser] = useState([]);
+  // async function fecthUser() {
+  //   try {
   // const handleDragEnd = async (event) => {
   //   const { active, over } = event;
   //   if (!over) return;
@@ -162,26 +173,23 @@ export default function Board() {
   // };
 
 
-  async function fecthUser() {
-    try {
+  //     const { data } = await axios({
+  //       method: "GET",
+  //       url: "/user",
+  //       headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
+  //     })
+  //     console.log(data, "<<< data user");
+  //     setUser(data);
 
-      const { data } = await axios({
-        method: "GET",
-        url: "/user",
-        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
-      })
-      // console.log(data, "<<< data user");
-      setUser(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    fecthUser();
-  }, [])
-
+  // useEffect(() => {
+  //   fecthUser();
+  // }, [])
+  const { user, setUser } = useContext(UserContext)
 
   const handleAddMember = async (e) => {
     e.preventDefault();
@@ -215,7 +223,7 @@ export default function Board() {
       fecthUser()
     }, [])
   };
-  
+
   return (
     <div className={`container mx-auto px-6 py-6 relative ${showModal || showMemberModal ? "backdrop-blur-md" : ""}`}>
       <h1 className="text-2xl font-bold text-[#2C3E50] text-center mb-6">Board Management</h1>
@@ -242,62 +250,62 @@ export default function Board() {
       <Comment boardId={id} />
 
       {/* Modal Overlay */}
-{(showModal || showMemberModal) && (
-  <div className="fixed inset-0 flex items-center justify-center bg-white/30 backdrop-blur-md z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-      <h2 className="text-lg font-bold text-[#2C3E50] mb-4">
-        {showModal ? "Create List" : "Add Member"}
-      </h2>
+      {(showModal || showMemberModal) && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white/30 backdrop-blur-md z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-bold text-[#2C3E50] mb-4">
+              {showModal ? "Create List" : "Add Member"}
+            </h2>
 
-      {showModal ? (
-        <>
-          <input
-            type="text"
-            placeholder="List Name"
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]"
-            value={newListName}
-            onChange={(e) => setNewListName(e.target.value)}
-          />
-          <div className="flex justify-end space-x-3 mt-4">
-            <button onClick={() => setShowModal(false)}
-              className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">
-              Cancel
-            </button>
-            <button onClick={addList}
-              className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">
-              Create
-            </button>
+            {showModal ? (
+              <>
+                <input
+                  type="text"
+                  placeholder="List Name"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]"
+                  value={newListName}
+                  onChange={(e) => setNewListName(e.target.value)}
+                />
+                <div className="flex justify-end space-x-3 mt-4">
+                  <button onClick={() => setShowModal(false)}
+                    className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">
+                    Cancel
+                  </button>
+                  <button onClick={addList}
+                    className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">
+                    Create
+                  </button>
+                </div>
+              </>
+            ) : (
+              <form onSubmit={handleAddMember}>
+                <select
+                  value={selectedUser}
+                  onChange={(e) => setSelectedUser(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]">
+                  <option value="" disabled>Select a user</option>
+                  {user.map((el) => (
+                    <option key={el.id} value={el.id}>{el.name}</option>
+                  ))}
+                </select>
+                <div className="flex justify-end space-x-3 mt-4">
+                  <button onClick={() => setShowMemberModal(false)}
+                    className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">
+                    Cancel
+                  </button>
+                  <button type="submit"
+                    className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">
+                    Add
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
-        </>
-      ) : (
-        <form onSubmit={handleAddMember}>
-          <select
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#85C1E9]">
-            <option value="" disabled>Select a user</option>
-            {user.map((el) => (
-              <option key={el.id} value={el.id}>{el.name}</option>
-            ))}
-          </select>
-          <div className="flex justify-end space-x-3 mt-4">
-            <button onClick={() => setShowMemberModal(false)}
-              className="px-4 py-2 bg-[#BDC3C7] text-white rounded-lg hover:bg-[#2C3E50]">
-              Cancel
-            </button>
-            <button type="submit"
-              className="px-4 py-2 bg-[#85C1E9] text-white rounded-lg hover:bg-[#2C3E50]">
-              Add
-            </button>
-          </div>
-        </form>
+        </div>
       )}
     </div>
-  </div>
-)}
-    </div>
   );
-  
+
   // return (
   //   <>
   //     <div className="container mx-auto p-4">

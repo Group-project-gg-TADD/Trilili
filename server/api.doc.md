@@ -1,5 +1,8 @@
-## List of api Group Project
+## List of API Endpoints
 
+<<<<<<< HEAD
+### 1. POST /register
+=======
 - `POST /register`
 - `POST /login`
 - `POST /board`
@@ -15,92 +18,324 @@
 - `PATCH /card/:id`
 - `GET /card/:listId`
 - `POST /card/:listId`
+>>>>>>> d68ac9fbf58e37327fee75c44cb132da34383d33
 
-## 1. POST /register
+**Request:**
 
-Request:
+- Body:
+  ```json
+  {
+    "email": "string",
+    "name": "string",
+    "password": "string"
+  }
+  ```
 
-- body:
+**Responses:**
 
-```json
-{
-  "email": "string",
-  "name": "string",
-  "password": "string"
-}
-```
+- 201 - Created:
+  ```json
+  {
+    "id": "integer",
+    "name": "string",
+    "email": "string"
+  }
+  ```
 
-_Response (201 - Created)_
+- 400 - Bad Request:
+  ```json
+  {
+    "message": "Email is required"
+  }
+  OR
+  {
+    "message": "Invalid email format"
+  }
+  OR
+  {
+    "message": "Email must be unique"
+  }
+  OR
+  {
+    "message": "Name is required"
+  }
+  OR
+  {
+    "message": "Password is required"
+  }
+  ```
 
-```json
-{
-  "id": "integer",
-  "name": "string",
-  "email": "string"
-}
-```
+### 2. POST /login
 
-_Response (400 - Bad Request)_
+**Request:**
 
-```json
-{
-  "message": "Email is required"
-}
-OR
-{
-  "message": "Invalid email format"
-}
-OR
-{
-  "message": "Email must be unique"
-}
-OR
-{
-  "message": "Name is required"
-}
-OR
-{
-  "message": "Password is required"
-}
-```
+- Body:
+  ```json
+  {
+    "email": "string",
+    "password": "string"
+  }
+  ```
 
-&nbsp;
+**Responses:**
 
-## 2. POST /login
+- 200 - OK:
+  ```json
+  {
+    "access_token": "string"
+  }
+  ```
 
-Request:
+- 400 - Bad Request:
+  ```json
+  {
+    "message": "Email is required"
+  }
+  OR
+  {
+    "message": "Password is required"
+  }
+  ```
 
-- body:
+- 401 - Unauthorized:
+  ```json
+  {
+    "message": "Invalid email/password"
+  }
+  ```
 
-```json
-{
-  "email": "string",
-  "password": "string"
-}
-```
+### 3. POST /board
 
-_Response (200 - OK)_
+**Request:**
 
-```json
-{
-  "access_token": "string"
-}
-```
+- Body:
+  ```json
+  {
+    "name": "string"
+  }
+  ```
 
-_Response (400 - Bad Request)_
+**Responses:**
 
-```json
-{
-  "message": "Email is required"
-}
-OR
-{
-  "message": "Password is required"
-}
-```
+- 201 - Created:
+  ```json
+  {
+    "id": "integer",
+    "name": "string"
+  }
+  ```
 
-_Response (401 - Unauthorized)_
+### 4. GET /board
 
+**Responses:**
+
+- 200 - OK:
+  ```json
+  [
+    {
+      "id": "integer",
+      "name": "string"
+    }
+  ]
+  ```
+
+### 5. GET /board/:id
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  {
+    "id": "integer",
+    "name": "string"
+  }
+  ```
+
+### 6. GET /board/member
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  [
+    {
+      "id": "integer",
+      "name": "string"
+    }
+  ]
+  ```
+
+### 7. GET /boardMembers
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  [
+    {
+      "id": "integer",
+      "Board": {
+        "id": "integer",
+        "name": "string"
+      }
+    }
+  ]
+  ```
+
+### 8. POST /board/member
+
+**Request:**
+
+- Body:
+  ```json
+  {
+    "boardId": "integer",
+    "userId": "integer"
+  }
+  ```
+
+**Responses:**
+
+- 201 - Created:
+  ```json
+  {
+    "id": "integer",
+    "boardId": "integer",
+    "userId": "integer"
+  }
+  ```
+
+### 9. GET /user
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  {
+    "id": "integer",
+    "name": "string",
+    "email": "string"
+  }
+  ```
+
+### 10. GET /users/board
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  [
+    {
+      "id": "integer",
+      "name": "string"
+    }
+  ]
+  ```
+
+### 11. GET /list/:boardId
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  [
+    {
+      "id": "integer",
+      "name": "string",
+      "boardId": "integer"
+    }
+  ]
+  ```
+
+### 12. POST /list/:boardId
+
+**Request:**
+
+- Body:
+  ```json
+  {
+    "name": "string"
+  }
+  ```
+
+**Responses:**
+
+- 201 - Created:
+  ```json
+  {
+    "id": "integer",
+    "name": "string",
+    "boardId": "integer"
+  }
+  ```
+
+
+### 13. PATCH /card/:id
+
+**Request:**
+
+- Body:
+  ```json
+  {
+    "name": "string",
+    "description": "string"
+  }
+  ```
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  {
+    "id": "integer",
+    "name": "string",
+    "description": "string",
+    "listId": "integer"
+  }
+  ```
+
+### 14. GET /card/:listId
+
+**Responses:**
+
+- 200 - OK:
+  ```json
+  [
+    {
+      "id": "integer",
+      "name": "string",
+      "description": "string",
+      "listId": "integer"
+    }
+  ]
+  ```
+
+### 15. POST /card/:listId
+
+**Request:**
+
+- Body:
+  ```json
+  {
+    "name": "string",
+    "description": "string"
+  }
+  ```
+
+**Responses:**
+
+- 201 - Created:
+  ```json
+  {
+    "id": "integer",
+    "name": "string",
+    "description": "string",
+    "listId": "integer"
+  }
+  ```
+
+<<<<<<< HEAD
+=======
 ```json
 {
   "message": "Invalid email/password"
@@ -506,3 +741,4 @@ _Response (404 - Not Found)_
   "message": "Resource not found"
 }
 ```
+>>>>>>> d68ac9fbf58e37327fee75c44cb132da34383d33
