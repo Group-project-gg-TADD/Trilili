@@ -400,3 +400,96 @@ _Response (200 - OK)_
   "updatedAt": "string"
 }
 ```
+
+## 14. GET /card/:listId
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "description": "string",
+  "listId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## 15. POST /card/:listId
+
+Request :
+
+- headers:
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+- body:
+
+```json
+{
+  "name": "string",
+  "description": "string"
+}
+```
+
+_Response (201 - Created)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "description": "string",
+  "listId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## Error Handling
+
+_Response (500 - Internal Server Error)_
+
+```json
+{
+  "message": "Internal server error"
+}
+```
+
+_Response (401 - Unauthorized)_
+
+```json
+{
+  "message": "Invalid token"
+}
+```
+
+_Response (403 - Forbidden)_
+
+```json
+{
+  "message": "You do not have access to this resource"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Resource not found"
+}
+```
