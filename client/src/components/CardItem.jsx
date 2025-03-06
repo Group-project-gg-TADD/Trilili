@@ -18,21 +18,31 @@ const CardItem = ({ item }) => {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
       }
     : undefined;
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-      className="item flex justify-between items-center bg-amber-200 p-1 cursor-pointer rounded-md border-2 border-zinc-900 hover:border-gray-500"
-    >
-      <span>{item.title}</span>
-      <button className="hover:bg-gray-600 p-1 rounded-sm">
-        <Edit2 size={16} />
-      </button>
-    </div>
-  );
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...listeners}
+        {...attributes}
+        className="bg-white p-2 rounded-md shadow-md border border-gray-200 my-2 cursor-pointer"
+      >
+        <span className="font-medium">{item.title}</span>
+      </div>
+    );
+  // return (
+  //   <div
+  //     ref={setNodeRef}
+  //     style={style}
+  //     {...listeners}
+  //     {...attributes}
+  //     className="item flex justify-between items-center bg-amber-200 p-1 cursor-pointer rounded-md border-2 border-zinc-900 hover:border-gray-500"
+  //   >
+  //     <span>{item.title}</span>
+  //     <button className="hover:bg-gray-600 p-1 rounded-sm">
+  //       <Edit2 size={16} />
+  //     </button>
+  //   </div>
+  // );
 };
 
 export default CardItem;
