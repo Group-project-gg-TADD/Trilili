@@ -58,7 +58,7 @@ export default function AddCardForm({ listId, onCardAdded, fetchList }) {
           />
           <button
             type="submit"
-            className="w-full bg-[#2C3E50] text-white p-2 rounded-md hover:bg-white hover:text-[#2C3E50] border-2 border-[#2C3E50] mt-2 transition"
+            className="w-full bg-[#2C3E50] text-white p-2 rounded-md hover:bg-[#85C1E9] hover:text-[#2C3E50] mt-2 transition"
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Card"}
