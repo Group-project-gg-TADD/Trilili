@@ -117,8 +117,49 @@ Request
 ```
 
 _Response (201 - Created)_
+
 ```json
 {
-  
+  "id": "integer",
+  "name": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
 }
 ```
+
+_Response (400 - BadRequest)_
+
+```json
+{
+  "message": "Name is required"
+}
+```
+
+## 4. GET/board
+
+Request:
+
+-headers:
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## 5. GET/board/:id
+
+Request :
+
+-headers
