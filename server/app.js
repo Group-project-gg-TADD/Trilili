@@ -2,7 +2,7 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-const { Board, User, BoardMember } = require("./models");
+const { Board, User, BoardMember, Comment } = require("./models");
 
 const express = require("express");
 const app = express();
@@ -32,13 +32,11 @@ function updateOnlineUsers(io) {
 
 // connection -> event bawaan socket.io
 io.on("connection", async (socket) => {
-  // console.log(socket.id, ">>>", socket.handshake.auth, "<<< auth user connect");
-  updateOnlineUsers(io);
-
   let user;
   if (socket.handshake.auth.token) {
-    payload = verifyToken(socket.handshake.auth.token);
+    const payload = verifyToken(socket.handshake.auth.token);
     user = await User.findByPk(payload.id);
+    socket.userId = user.id; // Store userId in the socket object
   }
 
   console.log(user, `USER SOCKET`);
@@ -105,6 +103,34 @@ app.get("/boardMembers", async (req, res, next) => {
       },
     });
     res.json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/comment/:boardId', async (req, res, next) => {
+  try {
+    const data = await Comment.findAll({
+      where: { boardId: req.params.boardId },
+      include: {
+        model: User,
+        attributes: ['name']
+      }
+    });
+    res.status(200).json(data);
+  } catch (error) {
+    next(error)
+  }
+});
+app.post('/comment', async (req, res, next) => {
+  try {
+    const { content, boardId } = req.body;
+    const data = await Comment.create({
+      content,
+      userId: +req.user.id,
+      boardId
+    });
+    res.status(200).json(data.content);
   } catch (error) {
     next(error);
   }

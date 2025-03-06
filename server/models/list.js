@@ -5,7 +5,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       List.belongsTo(models.Board, { foreignKey: "boardId" });
       List.hasMany(models.Card, { foreignKey: "listId" });
-      List.hasMany(models.Comment, { foreignKey: "listId" });
     }
   }
   List.init({
