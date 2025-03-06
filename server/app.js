@@ -6,7 +6,7 @@ const { Board, User, BoardMember, Comment } = require("./models");
 
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const cors = require("cors");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -154,6 +154,6 @@ app.use(errorHandler);
 
 // disconnect -> event bawaan socket.io
 
-httpServer.listen(3000, () => {
-  console.log(`Server running at: http://localhost:${3000}`);
+httpServer.listen(port, () => {
+  console.log(`Server running at: http://localhost:${port}`);
 });
