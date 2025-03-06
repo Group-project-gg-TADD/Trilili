@@ -1,17 +1,23 @@
 import axios from "../config/axiosInstance";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import ListCard from "../components/ListCard";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import Comment from "./Comment";
+import ListCardContext from "../context1/ListCard1";
+import UserContext from "../context1/user";
 
 export default function Board() {
+
+  // const { list, setList, fetchList } = useContext(ListCardContext)
+  // const { newListName, setNewListName, addList } = useContext(ListCardContext)
+  // const { list, setList, fetchList, newListName, setNewListName, addList } = useContext(ListCardContext);
+
+  const [selectedUser, setSelectedUser] = useState("");
+
+  const { id } = useParams();
   const [list, setList] = useState([]);
   const [newListName, setNewListName] = useState("");
-  const [user, setUser] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
-  const { id } = useParams();
-
   async function fetchList() {
     try {
       const { data } = await axios({
@@ -103,27 +109,27 @@ export default function Board() {
     }
   };
 
+  // const [user, setUser] = useState([]);
+  // async function fecthUser() {
+  //   try {
 
-  async function fecthUser() {
-    try {
+  //     const { data } = await axios({
+  //       method: "GET",
+  //       url: "/user",
+  //       headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
+  //     })
+  //     console.log(data, "<<< data user");
+  //     setUser(data);
 
-      const { data } = await axios({
-        method: "GET",
-        url: "/user",
-        headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
-      })
-      console.log(data, "<<< data user");
-      setUser(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    fecthUser();
-  }, [])
-
+  // useEffect(() => {
+  //   fecthUser();
+  // }, [])
+  const { user, setUser } = useContext(UserContext)
 
   const handleAddMember = async (e) => {
     e.preventDefault();
@@ -166,7 +172,8 @@ export default function Board() {
           className="border border-gray-300 rounded px-3 py-2"
         />
         <button
-          onClick={addList}
+          // onClick={addList}
+          onClick={() => addList(id)}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
           Add List

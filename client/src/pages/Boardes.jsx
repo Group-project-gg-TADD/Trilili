@@ -1,77 +1,83 @@
 import axios from "../config/axiosInstance";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import CardBoardes from "../components/CardBoardes";
 import CardBoardsMember from "../components/CardBoardsMember";
+import BoardesContext from "../context1/TodoBoardes";
+
 
 export default function Boardes() {
-  const [boards, setBoards] = useState([]);
-  const [nameBoard, setNameBoard] = useState("");
-  const [boardsMember, setBoardsMember] = useState([]);
+  // const [boards, setBoards] = useState([]);
+  // const [nameBoard, setNameBoard] = useState("");
+  // const [boardsMember, setBoardsMember] = useState([]);
 
-  const fetchBoardsMember = async () => {
-    try {
-      const { data } = await axios({
-        method: "GET",
-        url: "/boardMembers",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      console.log(data, "memberrr");
-      setBoardsMember(data);
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.log(error);
-    }
-  };
+  // const fetchBoardsMember = async () => {
+  //   try {
+  //     const { data } = await axios({
+  //       method: "GET",
+  //       url: "/boardMembers",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //       },
+  //     });
+  //     console.log(data, "memberrr");
+  //     setBoardsMember(data);
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchBoardsMember();
-  }, []);
+  // useEffect(() => {
+  //   fetchBoardsMember();
+  // }, []);
 
-  const fetchBoards = async () => {
-    try {
-      const { data } = await axios({
-        method: "GET",
-        url: "/board",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
+  // const fetchBoards = async () => {
+  //   try {
+  //     const { data } = await axios({
+  //       method: "GET",
+  //       url: "/board",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //       },
+  //     });
 
-      console.log(data);
-      setBoards(data);
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.log(error);
-    }
-  };
+  //     console.log(data);
+  //     setBoards(data);
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchBoards();
-  }, []);
+  // useEffect(() => {
+  //   fetchBoards();
+  // }, []);
 
-  const handleAddBoard = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axios({
-        method: "POST",
-        url: "/board",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        data: {
-          name: nameBoard,
-        },
-      });
-      console.log(data);
-      fetchBoards();
-    } catch (error) {
-      toast.error(error.response.data.message);
-      console.log(error);
-    }
-  };
+  // const handleAddBoard = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const { data } = await axios({
+  //       method: "POST",
+  //       url: "/board",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //       },
+  //       data: {
+  //         name: nameBoard,
+  //       },
+  //     });
+  //     console.log(data);
+  //     fetchBoards();
+  //   } catch (error) {
+  //     toast.error(error.response.data.message);
+  //     console.log(error);
+  //   }
+  // };
+
+  const { boards, setBoards, fetchBoards } = useContext(BoardesContext)
+  const { nameBoard, setNameBoard, handleAddBoard } = useContext(BoardesContext)
+  const { boardsMember, setBoardsMember, fetchBoardsMember } = useContext(BoardesContext)
 
   return (
     <>
