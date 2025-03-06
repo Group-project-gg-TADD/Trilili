@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import socket from "../config/socket";
+import loadGemini from '../config/geminiAi'
 
 export default function Comment({ boardId }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -33,15 +34,40 @@ export default function Comment({ boardId }) {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
-    socket.emit("board/new_message", {
-      boardId,
-      newMessage,
-    });
-    setNewMessage("");
+  
+    const gemini = await loadGemini();
+    
+    const prompt = `Below is a text in either Bahasa Indonesia or Indonesian Slang. Please transform it to be more corporate-friendly and constructive. Return the result in one sentence in Bahasa Indonesia. If there is no clear meaning, return the original text. If it's highly offensive, return 'Saya ingin berkata kasar'.
+  
+  Text: "${newMessage}"`;
+  
+    try {
+      const result = await gemini.generateContent(prompt);
+  
+      console.log("Gemini Full Response:", result);
+  
+      const transformedMessage =
+        result.response?.candidates?.[0]?.content?.parts?.[0]?.text || newMessage;
+  
+      console.log("Transformed Message:", transformedMessage);
+  
+      socket.emit("board/new_message", {
+        boardId,
+        newMessage: transformedMessage,
+      });
+  
+      setTimeout(() => {
+        setNewMessage("");
+      }, 100);
+    } catch (error) {
+      console.error("Error generating content with Gemini:", error);
+    }
   };
+  
+
 
   return (
     <>
@@ -55,11 +81,24 @@ export default function Comment({ boardId }) {
             <h2 className="text-lg font-bold text-[#2C3E50]">Chat Room</h2>
             <button onClick={() => setShowChat(false)} className="text-gray-500">✖</button>
           </div>
-          <div className="h-80 overflow-y-auto border p-3 rounded-md bg-gray-100">
-            {messages.map((m, i) => (
-              <div key={i} className={`mb-2 p-2 rounded-lg text-sm ${localStorage.getItem("username") === m.sender ? "bg-[#85C1E9] text-white self-end" : "bg-white text-[#2C3E50] self-start"}`}>
-                <span className="block font-semibold">{m.sender}</span>
-                {m.message}
+          <div className="flex-1 p-4 overflow-y-auto space-y-4">
+            {messages.map((m, index) => (
+              <div
+                key={index}
+                className={`flex ${localStorage.getItem("username") === m.sender
+                    ? "justify-end"
+                    : "justify-start"
+                  }`}
+              >
+                <div
+                  className={`p-3 rounded-lg text-sm max-w-xs sm:max-w-md ${localStorage.getItem("username") === m.sender
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-700"
+                    }`}
+                >
+                  <span className="block font-semibold">{m.sender}</span>
+                  {m.message}
+                </div>
               </div>
             ))}
           </div>
