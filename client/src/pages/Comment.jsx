@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import socket from "../config/socket";
 import loadGemini from '../config/geminiAi'
+import { useRef } from "react";
 
 export default function Comment({ boardId }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -8,6 +9,7 @@ export default function Comment({ boardId }) {
   const [newMessage, setNewMessage] = useState("");
   const [showChat, setShowChat] = useState(false);
   console.log(onlineUsers);
+  const chatBoxRef = useRef(null)
 
   useEffect(() => {
     //1. component dibuka, langsung request join socket comment
@@ -74,7 +76,7 @@ export default function Comment({ boardId }) {
       {/* Floating Chat Button */}
       <button
         onClick={() => setShowChat(true)}
-        className="fixed bottom-5 right-5 bg-[#85C1E9] text-white p-3 rounded-full shadow-lg hover:bg-[#2C3E50] transition"
+        className="fixed bottom-5 right-5 bg-[#2C3E50] text-white p-3 rounded-full shadow-lg hover:bg-[#2C3E50] transition"
       >
         💬 Chat
       </button>
@@ -95,7 +97,7 @@ export default function Comment({ boardId }) {
 
           {/* Messages */}
           <div
-            ref={chatBoxRef}
+            ref={chatBoxRef} // Gunakan ref yang sudah dideklarasikan
             className="h-80 overflow-y-auto border p-3 rounded-md bg-gray-100"
           >
             {messages.map((m, i) => (

@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router";
 import axios from "../config/axiosInstance";
 import logo from "../assets/logo.png";
 import profileIcon from "../assets/profile.png";
+import { toast } from "react-toastify";
 
 export default function Navbar({ fetchBoards }) {  // ✅ Ensure fetchBoards is received as a prop
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export default function Navbar({ fetchBoards }) {  // ✅ Ensure fetchBoards is 
       setNameBoard("");
     } catch (error) {
       console.error("Error creating board: ", error);
+      toast.error(error.response.data.message);
     }
   };
 

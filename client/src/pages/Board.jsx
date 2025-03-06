@@ -69,6 +69,7 @@ export default function Board() {
       navigate(0)
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data.message);
     }
   }
 
@@ -186,7 +187,7 @@ export default function Board() {
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (!selectedUser) {
-      toast("Please select a user to add.");
+      toast.error("Please select a user to add.");
       return;
     }
 
@@ -201,13 +202,13 @@ export default function Board() {
         headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
       });
 
-      toast("Member added successfully!");
+      toast.success("Member added successfully!");
       setSelectedUser(""); // Reset dropdown selection
       setShowMemberModal(false)
       navigate(0)
     } catch (error) {
       console.error(error);
-      toast("Failed to add member.");
+      toast.error(error.response.data.message);
     }
 
     useEffect(() => {
