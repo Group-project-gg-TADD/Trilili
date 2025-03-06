@@ -163,3 +163,49 @@ _Response (200 - OK)_
 Request :
 
 -headers
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## 6. GET /board/member
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "boardId": "integer",
+  "userId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## 7. GET /boardMembers
+
+Request:
+
