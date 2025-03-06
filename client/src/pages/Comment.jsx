@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import socket from "../config/socket";
 import loadGemini from '../config/geminiAi'
+import { useRef } from "react";
 
 export default function Comment({ boardId }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -8,6 +9,7 @@ export default function Comment({ boardId }) {
   const [newMessage, setNewMessage] = useState("");
   const [showChat, setShowChat] = useState(false);
   console.log(onlineUsers);
+  const chatBoxRef = useRef(null)
 
   useEffect(() => {
     //1. component dibuka, langsung request join socket comment
@@ -71,50 +73,69 @@ export default function Comment({ boardId }) {
 
   return (
     <>
-      <button onClick={() => setShowChat(true)} className="fixed bottom-5 right-5 bg-[#85C1E9] text-white p-3 rounded-full shadow-lg">
+      {/* Floating Chat Button */}
+      <button
+        onClick={() => setShowChat(true)}
+        className="fixed bottom-5 right-5 bg-[#2C3E50] text-white p-3 rounded-full shadow-lg hover:bg-[#2C3E50] transition"
+      >
         💬 Chat
       </button>
 
+      {/* Floating Chat Box */}
       {showChat && (
-        <div className="fixed right-5 bottom-16 w-96 bg-white rounded-lg shadow-lg p-5 border border-gray-300">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-[#2C3E50]">Chat Room</h2>
-            <button onClick={() => setShowChat(false)} className="text-gray-500">✖</button>
+        <div className="fixed right-5 bottom-16 w-96 bg-white rounded-lg shadow-lg border border-gray-300">
+          {/* Header */}
+          <div className="flex justify-between items-center bg-[#85C1E9] text-white px-4 py-3 rounded-t-lg">
+            <h2 className="text-lg font-semibold">Chat Room</h2>
+            <button
+              onClick={() => setShowChat(false)}
+              className="text-white hover:text-gray-300 transition"
+            >
+              ✖
+            </button>
           </div>
-          <div className="flex-1 p-4 overflow-y-auto space-y-4">
-            {messages.map((m, index) => (
+
+          {/* Messages */}
+          <div
+            ref={chatBoxRef} // Gunakan ref yang sudah dideklarasikan
+            className="h-80 overflow-y-auto border p-3 rounded-md bg-gray-100"
+          >
+            {messages.map((m, i) => (
               <div
-                key={index}
-                className={`flex ${localStorage.getItem("username") === m.sender
-                    ? "justify-end"
-                    : "justify-start"
-                  }`}
+                key={i}
+                className={`mb-2 p-2 rounded-lg text-sm max-w-xs ${
+                  localStorage.getItem("username") === m.sender
+                    ? "bg-[#85C1E9] text-white self-end ml-auto"
+                    : "bg-white text-[#2C3E50] border self-start"
+                }`}
               >
-                <div
-                  className={`p-3 rounded-lg text-sm max-w-xs sm:max-w-md ${localStorage.getItem("username") === m.sender
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 text-gray-700"
-                    }`}
-                >
-                  <span className="block font-semibold">{m.sender}</span>
-                  {m.message}
-                </div>
+                <span className="block text-xs text-gray-500">{m.sender}</span>
+                {m.message}
               </div>
             ))}
           </div>
-          <form onSubmit={handleSubmit} className="mt-4 flex">
+
+          {/* Input Area */}
+          <form onSubmit={handleSubmit} className="flex p-2 border-t bg-white">
             <input
               type="text"
-              className="flex-1 p-2 border rounded-md"
+              className="flex-1 p-2 border rounded-md focus:ring-2 focus:ring-[#85C1E9]"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type your message..."
             />
-            <button type="submit" className="ml-2 px-4 py-2 bg-[#85C1E9] text-white rounded-md hover:bg-[#2C3E50]">Send</button>
+            <button
+              type="submit"
+              className="ml-2 px-4 py-2 bg-[#85C1E9] text-white rounded-md hover:bg-[#2C3E50] transition"
+            >
+              Send
+            </button>
           </form>
         </div>
       )}
     </>
   );
+
   // return (
   //   <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg h-screen flex flex-col">
   //     <div className="flex h-full border rounded-lg overflow-hidden">

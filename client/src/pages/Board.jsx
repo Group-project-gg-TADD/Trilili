@@ -4,6 +4,8 @@ import { useParams, Link, useNavigate } from "react-router";
 import ListCard from "../components/ListCard";
 import { closestCorners, DndContext } from "@dnd-kit/core";
 import Comment from "./Comment";
+import { toast } from "react-toastify";
+import { useRef } from "react";
 
 export default function Board() {
   const [list, setList] = useState([]);
@@ -14,6 +16,7 @@ export default function Board() {
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false);
   const [showMemberModal, setShowMemberModal] = useState(false);
+  const chatBoxRef = useRef(null); 
 
   async function fetchList() {
     try {
@@ -66,6 +69,7 @@ export default function Board() {
       navigate(0)
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data.message);
     }
   }
 
@@ -183,7 +187,7 @@ export default function Board() {
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (!selectedUser) {
-      alert("Please select a user to add.");
+      toast.error("Please select a user to add.");
       return;
     }
 
@@ -198,13 +202,13 @@ export default function Board() {
         headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` },
       });
 
-      alert("Member added successfully!");
+      toast.success("Member added successfully!");
       setSelectedUser(""); // Reset dropdown selection
       setShowMemberModal(false)
       navigate(0)
     } catch (error) {
       console.error(error);
-      alert("Failed to add member.");
+      toast.error(error.response.data.message);
     }
 
     useEffect(() => {
