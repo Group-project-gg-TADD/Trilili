@@ -302,3 +302,101 @@ Request:
   "access_token": "Bearer <access_token>"
 }
 ```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "boardId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## 11. POST /list/:boardId
+
+Request:
+
+- headers :
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+- body :
+
+```json
+{
+  "name": "string"
+}
+```
+
+_Response (201 - Created)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "boardId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
+
+## 12. DELETE /list/delete/:id
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "List deleted successfully"
+}
+```
+
+## 13. PATCH /card/:id
+
+Request:
+
+- headers :
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+- body :
+
+```json
+{
+  "name": "string",
+  "description": "string"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "id": "integer",
+  "name": "string",
+  "description": "string",
+  "listId": "integer",
+  "createdAt": "string",
+  "updatedAt": "string"
+}
+```
