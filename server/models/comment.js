@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   class Comment extends Model {
     static associate(models) {
       Comment.belongsTo(models.User, { foreignKey: "userId" });
-      Comment.belongsTo(models.List, { foreignKey: "listId" });
+      Comment.belongsTo(models.Board, { foreignKey: "boardId" }); // Changed from List to Board
     }
   }
   Comment.init({
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    listId: {
+    boardId: { // Changed from listId to boardId
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -27,9 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     hooks: {
       beforeCreate: async (comment) => {
         const gemini = await loadGemini();
-        const prompt = 'Could you pls transform below comments to be more corporate friendly and perhaps more productive/constructive?'
+        const prompt = `Below is a text in either Bahasa Indonesia or Indonesian Slang. Please transform it to be more corporate-friendly and constructive. Return the result in one sentence in Bahasa Indonesia. If there is no clear meaning, return the original text. If it's highly offensive, return 'Saya ingin berkata kasar'.
+  Text: "${comment.content}"`;
         const result = await gemini.generateContent([prompt, comment.content]);
-        comment.content = result.response.text();
+        comment.content = result.response?.candidates?.[0]?.content?.parts?.[0]?.text || comment.content;
       }
     }
   });
