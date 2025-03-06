@@ -2,6 +2,19 @@
 
 - `POST /register`
 - `POST /login`
+- `POST /board`
+- `GET /board`
+- `GET /board/:id`
+- `GET /board/member`
+- `GET /boardMembers`
+- `POST /board/member`
+- `GET /users/board`
+- `GET /list/:boardId`
+- `POST /list/:boardId`
+- `DELETE /list/delete/:id`
+- `PATCH /card/:id`
+- `GET /card/:listId`
+- `POST /card/:listId`
 
 ## 1. POST /register
 
