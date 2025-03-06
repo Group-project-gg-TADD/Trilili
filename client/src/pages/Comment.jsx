@@ -38,27 +38,35 @@ export default function Comment({ boardId }) {
     if (newMessage.trim() === "") return;
   
     const gemini = await loadGemini();
-    const prompt =
-      "Could you please transform the following text to be more corporate-friendly and constructive? Please return the result directly into 1 sentence. Return the most relevant option if there are multiple options.";
-    const result = await gemini.generateContent([prompt, newMessage]);
+    
+    const prompt = `Below is a text in either Bahasa Indonesia or Indonesian Slang. Please transform it to be more corporate-friendly and constructive. Return the result in one sentence in Bahasa Indonesia. If there is no clear meaning, return the original text. If it's highly offensive, return 'Saya ingin berkata kasar'.
   
-    // Extract text from Gemini's response
-    const transformedMessage =
-      result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || newMessage;
+  Text: "${newMessage}"`;
   
-    console.log("Transformed Message:", transformedMessage);
+    try {
+      const result = await gemini.generateContent(prompt);
   
-    socket.emit("board/new_message", {
-      boardId,
-      newMessage: transformedMessage,
-    });
+      console.log("Gemini Full Response:", result);
   
-    setTimeout(() => {
-      setNewMessage("");
-    }, 100);
+      const transformedMessage =
+        result.response?.candidates?.[0]?.content?.parts?.[0]?.text || newMessage;
+  
+      console.log("Transformed Message:", transformedMessage);
+  
+      socket.emit("board/new_message", {
+        boardId,
+        newMessage: transformedMessage,
+      });
+  
+      setTimeout(() => {
+        setNewMessage("");
+      }, 100);
+    } catch (error) {
+      console.error("Error generating content with Gemini:", error);
+    }
   };
   
-  
+
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg h-screen flex flex-col">
@@ -88,18 +96,16 @@ export default function Comment({ boardId }) {
             {messages.map((m, index) => (
               <div
                 key={index}
-                className={`flex ${
-                  localStorage.getItem("username") === m.sender
+                className={`flex ${localStorage.getItem("username") === m.sender
                     ? "justify-end"
                     : "justify-start"
-                }`}
+                  }`}
               >
                 <div
-                  className={`p-3 rounded-lg text-sm max-w-xs sm:max-w-md ${
-                    localStorage.getItem("username") === m.sender
+                  className={`p-3 rounded-lg text-sm max-w-xs sm:max-w-md ${localStorage.getItem("username") === m.sender
                       ? "bg-blue-500 text-white"
                       : "bg-gray-200 text-gray-700"
-                  }`}
+                    }`}
                 >
                   <span className="block font-semibold">{m.sender}</span>
                   {m.message}
