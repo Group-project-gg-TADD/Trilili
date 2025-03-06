@@ -290,3 +290,15 @@ _Response (200 - OK)_
   "updatedAt": "string"
 }
 ```
+
+## 10. GET /list/:boardId
+
+Request:
+
+-headers:
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
