@@ -2,15 +2,80 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
+const { Board, User, BoardMember, Comment } = require("./models");
+
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const cors = require("cors");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+function updateOnlineUsers(io) {
+  const onlineUsers = [];
+  for (const [socketId, socketObj] of io.of("/").sockets) {
+    if (socketObj.handshake.auth?.username) {
+      onlineUsers.push({
+        socketId: socketId,
+        username: socketObj.handshake.auth.username,
+      });
+    }
+  }
+  io.emit("users/online", onlineUsers);
+}
+
+// connection -> event bawaan socket.io
+io.on("connection", async (socket) => {
+  let user;
+  if (socket.handshake.auth.token) {
+    const payload = verifyToken(socket.handshake.auth.token);
+    user = await User.findByPk(payload.id);
+    socket.userId = user.id; // Store userId in the socket object
+  }
+
+  console.log(user, `USER SOCKET`);
+
+  // Kirim pesan ke orang yg join
+  socket.emit("welcome_message", "Hi brader " + socket.id);
+
+  socket.on("board/new_message", ({ boardId, newMessage }) => {
+    io.to("board/" + boardId).emit("board/update_message", {
+      message: newMessage,
+      sender: user?.name,
+    });
+  });
+
+  //2. teruma event join socket comment
+  socket.on("board/join", (arg) => {
+    //3. joinkan user sekarang ke room board/1
+    socket.join("board/" + arg.boardId);
+
+    //4. kasih info ke smua member room, bahwa ada yg join
+    io.to("board/" + arg.boardId).emit(
+      "chat/new_message",
+      "welcome to room " + "board/" + arg.boardId
+    );
+  });
+
+  socket.on("disconnect", () => {
+    console.log(socket.id, "<<< new user disconnect");
+    updateOnlineUsers(io);
+  });
+});
+
 const userController = require("./controllers/userController");
 const { authentication } = require("./middlewares/authentication");
 const { errorHandler } = require("./middlewares/errorHandler");
 const boardController = require("./controllers/boardController");
 const cardController = require("./controllers/cardController");
+const listController = require("./controllers/listController");
+const { verifyToken } = require("./helpers/jwt");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -26,14 +91,69 @@ app.post("/login", userController.login);
 app.use(authentication);
 app.post("/board", boardController.addBoard);
 app.get("/board", boardController.getBoards);
+
 app.get("/board/:id", boardController.getBoardById);
+app.get("/board/member", boardController.getBoardMember);
+app.get("/boardMembers", async (req, res, next) => {
+  try {
+    const data = await BoardMember.findAll({
+      where: { userId: req.user.id },
+      include: {
+        model: Board,
+      },
+    });
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.get('/comment/:boardId', async (req, res, next) => {
+  try {
+    const data = await Comment.findAll({
+      where: { boardId: req.params.boardId },
+      include: {
+        model: User,
+        attributes: ['name']
+      }
+    });
+    res.status(200).json(data);
+  } catch (error) {
+    next(error)
+  }
+});
+app.post('/comment', async (req, res, next) => {
+  try {
+    const { content, boardId } = req.body;
+    const data = await Comment.create({
+      content,
+      userId: +req.user.id,
+      boardId
+    });
+    res.status(200).json(data.content);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.post("/board/member", boardController.addBoardMember);
+app.get ("/user", boardController.getUser);
+
+app.get("/users/board", boardController.getBoardByIdMembers);
+
+app.get("/list/:boardId", listController.getList);
+app.post("/list/:boardId", listController.addList);
+app.delete("/list/delete/:id", listController.deleteList)
+
+app.patch("/card/:id", cardController.updateCard);
 
 app.get("/card/:listId", cardController.getCard);
 app.post("/card/:listId", cardController.addCard);
 
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`running on port ${port}`);
+// disconnect -> event bawaan socket.io
+
+httpServer.listen(port, () => {
+  console.log(`Server running at: http://localhost:${port}`);
 });

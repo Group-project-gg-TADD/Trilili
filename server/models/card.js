@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class Card extends Model {
 
     static associate(models) {
-      Card.hasMany(models.List, { foreignKey: "listId" })
+      Card.belongsTo(models.List, { foreignKey: "listId" })
 
     }
   }
@@ -38,19 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     listId: {
       type: DataTypes.INTEGER, 
       allowNull: false
-    },
-    dueDate: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "ToDo"
-    },
-    imgUrl: {
-      type: DataTypes.STRING,
-      allowNull: false,
     },
   }, {
     sequelize,

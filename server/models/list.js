@@ -1,12 +1,10 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class List extends Model {
     static associate(models) {
-      List.belongsTo(models.Card, { foreignKey: "listId" })
-      List.hasMany(models.Board, {foreignKey: "boardId"})
+      List.belongsTo(models.Board, { foreignKey: "boardId" });
+      List.hasMany(models.Card, { foreignKey: "listId" });
     }
   }
   List.init({
@@ -15,14 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notNull: {
-          msg: "Name is required"
+          msg: "List name is required"
         },
         notEmpty: {
-          msg: "Name is required"
-        }, 
+          msg: "List name is required"
+        },
       }
     },
-    boardId:  {
+    boardId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
