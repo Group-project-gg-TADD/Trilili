@@ -66,15 +66,12 @@ class boardController {
 
   static async getUser(req, res, next) {
     try {
-
       const user = await User.findAll({
-        attributes: { exclude: ['password'] }
+        attributes: { exclude: ["password"] },
       });
       res.status(200).json(user);
-      
     } catch (error) {
       next(error);
-      
     }
   }
 
@@ -82,16 +79,24 @@ class boardController {
     try {
       const { boardId, userId } = req.body;
 
+      // Cek apakah board ada
       const board = await Board.findByPk(boardId);
       if (!board) {
         return res.status(404).json({ message: "Board not found" });
       }
 
-      const user = await User.findByPk(userId);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
+      // Cek apakah user sudah menjadi member board
+      const existingMember = await BoardMember.findOne({
+        where: { boardId, userId },
+      });
+
+      if (existingMember) {
+        return res
+          .status(400)
+          .json({ message: "User is already a member of this board" });
       }
 
+      // Tambahkan user sebagai member
       await BoardMember.create({ boardId, userId });
       res.status(201).json({ message: "Member added to board" });
     } catch (error) {

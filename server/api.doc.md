@@ -93,3 +93,32 @@ _Response (401 - Unauthorized)_
   "message": "Invalid email/password"
 }
 ```
+
+&nbsp;
+
+## 3. POST /board
+
+Request
+
+- headers :
+
+```json
+{
+  "access_token": "Bearer <access_token>"
+}
+```
+
+- body :
+
+```json
+{
+  "name": "string"
+}
+```
+
+_Response (201 - Created)_
+```json
+{
+  
+}
+```
